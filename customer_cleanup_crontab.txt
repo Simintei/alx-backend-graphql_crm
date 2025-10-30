@@ -1,1 +1,0 @@
-bash crm/cron_jobs/clean_inactive_customers.sh
