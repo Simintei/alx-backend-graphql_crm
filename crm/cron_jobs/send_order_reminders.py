@@ -15,7 +15,7 @@ def get_date_seven_days_ago():
     return seven_days_ago.strftime("%Y-%m-%d")
 
 def fetch_pending_orders(min_date):
-    """Fetches orders using a GraphQL query."""
+    """Fetches orders using a GraphQL query via the requests library."""
     
     # NOTE: We assume your 'allOrders' query accepts a filter argument 
     # like 'orderDate_Gte' (Greater than or Equal) from django-filter.
@@ -42,6 +42,7 @@ def fetch_pending_orders(min_date):
     }
     
     try:
+        # Use requests.post instead of gql/Client
         response = requests.post(GRAPHQL_URL, headers=headers, data=json.dumps(payload))
         response.raise_for_status() # Raise exception for bad status codes (4xx or 5xx)
         data = response.json()
@@ -69,6 +70,7 @@ def log_reminders(orders):
     
     for edge in orders:
         order = edge['node']
+        # NOTE: Using a simple integer conversion for ID here. Adjust if your ID is UUID/string.
         order_id = order['id']
         customer_email = order['customer']['email'] if order.get('customer') else "N/A"
         order_date = order['orderDate']
@@ -92,8 +94,6 @@ if __name__ == "__main__":
     min_date = get_date_seven_days_ago()
     
     # In a cron job, suppress excessive logging unless there's an issue
-    # print(f"Fetching orders placed on or after: {min_date}") 
-    
     orders = fetch_pending_orders(min_date)
     count = log_reminders(orders)
 
