@@ -37,6 +37,7 @@ class OrderType(DjangoObjectType):
 # ----------------------------
 class Query(graphene.ObjectType):
     all_customers = DjangoFilterConnectionField(CustomerType, order_by=graphene.String())
+    customer_by_id = graphene.Field(CustomerType, id=graphene.Int(required=True))
     all_products = DjangoFilterConnectionField(ProductType, order_by=graphene.String())
     all_orders = DjangoFilterConnectionField(OrderType, order_by=graphene.String())
 
@@ -182,3 +183,7 @@ class Mutation(graphene.ObjectType):
     bulk_create_customers = BulkCreateCustomers.Field()
     create_product = CreateProduct.Field()
     create_order = CreateOrder.Field()
+
+
+# Define schema
+schema = graphene.Schema(query=Query)
