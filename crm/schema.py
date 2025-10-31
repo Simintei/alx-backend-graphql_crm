@@ -3,7 +3,8 @@ from graphene_django import DjangoObjectType
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-import re
+from crm.models import Product
+
 
 from .models import Customer, Product, Order
 
